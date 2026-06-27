@@ -1,6 +1,18 @@
 # ClubSphere AI
 
-ClubSphere AI is an AI-powered **Club & Community Intelligence Agent** that enables users to upload club or community documents and interact with them using natural language. The system leverages **Retrieval-Augmented Generation (RAG)** with **Gemini AI** and **Qdrant** to provide accurate, context-aware answers grounded in uploaded documents.
+ClubSphere AI is an AI-powered Club & Community Intelligence Agent that enables users to upload club or community documents and interact with them using natural language. The system leverages Retrieval-Augmented Generation (RAG), Google Gemini, and Qdrant Cloud to provide accurate, context-aware answers grounded in uploaded documents.
+
+---
+
+## Live Demo
+
+Frontend (Vercel)
+
+`https://clubsphere-ai.vercel.app`
+
+Backend (Render)
+
+`https://clubsphere-ai-backend.onrender.com`
 
 ---
 
@@ -9,13 +21,13 @@ ClubSphere AI is an AI-powered **Club & Community Intelligence Agent** that enab
 * Upload PDF documents
 * Automatic PDF text extraction
 * Intelligent document chunking
-* Gemini Embeddings for semantic search
-* Qdrant Vector Database
+* Semantic Search using Gemini Embeddings
 * AI-powered Question Answering
 * Conversation Memory
 * Source Citation
 * Document Summarization
 * Recommendation generation based on document context
+* Cloud deployment using Render and Vercel
 
 ---
 
@@ -23,7 +35,9 @@ ClubSphere AI is an AI-powered **Club & Community Intelligence Agent** that enab
 
 ### Frontend
 
-* React (Vite)
+* React
+* Vite
+* JavaScript
 
 ### Backend
 
@@ -32,17 +46,17 @@ ClubSphere AI is an AI-powered **Club & Community Intelligence Agent** that enab
 
 ### AI
 
-* Gemini 2.5 Flash
+* Google Gemini 2.5 Flash
 * Gemini Embedding API
 
-### Database
+### Vector Database
 
-* Qdrant Vector Database
+* Qdrant Cloud
 
-### Other Tools
+### Deployment
 
-* Docker
-* PyPDF
+* Render
+* Vercel
 
 ---
 
@@ -54,10 +68,10 @@ clubsphere-ai/
 ├── backend/
 │   ├── main.py
 │   ├── upload.py
+│   ├── retriever.py
 │   ├── memory.py
 │   ├── config.py
 │   ├── requirements.txt
-│   ├── .env
 │   └── ...
 │
 ├── frontend/
@@ -71,72 +85,61 @@ clubsphere-ai/
 
 ---
 
-## Prerequisites
+## Installation
 
-Install the following before running the project:
+### Clone the repository
 
-* Python 3.11+
-* Node.js (v18 or later)
-* Docker Desktop
-* Git
+```bash
+git clone https://github.com/ManibhushanaKG/clubsphere-ai.git
 
----
-
-## Environment Variables
-
-Create a file named `.env` inside the **backend** folder.
-
-Example:
-
+cd clubsphere-ai
 ```
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-
-QDRANT_URL=http://localhost:6333
-
-QDRANT_API_KEY=
-```
-
-Get your Gemini API key from:
-
-https://aistudio.google.com/app/apikey
 
 ---
 
 ## Backend Setup
 
-Navigate to the backend folder.
-
-```
+```bash
 cd backend
-```
 
-Create a virtual environment.
-
-```
 python -m venv venv
 ```
 
-Activate it.
-
 Windows
 
-```
+```bash
 venv\Scripts\activate
 ```
 
-Install dependencies.
+Linux/macOS
 
+```bash
+source venv/bin/activate
 ```
+
+Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-Start the FastAPI server.
+Create a `.env` file inside the backend folder.
 
+```env
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+
+QDRANT_URL=YOUR_QDRANT_CLOUD_URL
+
+QDRANT_API_KEY=YOUR_QDRANT_API_KEY
 ```
+
+Run the backend
+
+```bash
 uvicorn main:app --reload
 ```
 
-Backend runs on:
+Backend
 
 ```
 http://127.0.0.1:8000
@@ -146,25 +149,25 @@ http://127.0.0.1:8000
 
 ## Frontend Setup
 
-Open another terminal.
-
-```
+```bash
 cd frontend
-```
 
-Install packages.
-
-```
 npm install
 ```
 
-Run the React application.
+Create a `.env` file inside the frontend folder.
 
+```env
+VITE_API_URL=http://127.0.0.1:8000
 ```
+
+Run
+
+```bash
 npm run dev
 ```
 
-Frontend runs on:
+Frontend
 
 ```
 http://localhost:5173
@@ -172,38 +175,19 @@ http://localhost:5173
 
 ---
 
-## Qdrant Setup (Docker)
+## How It Works
 
-Pull and run Qdrant.
-
-```
-docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
-```
-
-If the container already exists:
-
-```
-docker start qdrant
-```
-
-Qdrant Dashboard:
-
-```
-http://localhost:6333/dashboard
-```
-
----
-
-## How to Use
-
-1. Start Docker Desktop.
-2. Start the Qdrant container.
-3. Start the FastAPI backend.
-4. Start the React frontend.
-5. Open `http://localhost:5173`.
-6. Upload a PDF document.
-7. Ask questions in natural language.
-8. View AI-generated answers with source citations.
+1. User uploads a PDF document.
+2. Text is extracted from the PDF.
+3. The document is divided into semantic chunks.
+4. Gemini Embeddings convert each chunk into vectors.
+5. Embeddings are stored in Qdrant Cloud.
+6. User asks a question.
+7. The question is converted into an embedding.
+8. Qdrant performs semantic search.
+9. Relevant chunks are retrieved.
+10. Gemini 2.5 Flash generates an answer using the retrieved context.
+11. The response is returned with source citations.
 
 ---
 
@@ -211,41 +195,43 @@ http://localhost:6333/dashboard
 
 * Who is the President of the club?
 * What are the responsibilities of the Treasurer?
-* List all major events.
-* Who participated in the AI Workshop?
-* Summarize the club.
-* Who should lead the next AI Workshop?
+* List all upcoming events.
+* Summarize this document.
+* What achievements are mentioned?
+* Recommend improvements for future club events.
 
 ---
 
-## Architecture
+## System Architecture
 
 ```
-                 User
-                   │
-                   ▼
-          React Frontend
-                   │
-                   ▼
-           FastAPI Backend
-                   │
-        ┌──────────┴──────────┐
-        │                     │
-        ▼                     ▼
- Conversation Memory     Gemini Embeddings
-        │                     │
-        └──────────┬──────────┘
-                   ▼
-              Qdrant Search
-                   │
-                   ▼
-          Retrieved Context
-                   │
-                   ▼
-          Gemini 2.5 Flash
-                   │
-                   ▼
-      Response + Source Citation
+                    User
+                      │
+                      ▼
+             React + Vite Frontend
+                      │
+              HTTPS API Requests
+                      │
+                      ▼
+               FastAPI Backend
+                      │
+       ┌──────────────┴──────────────┐
+       ▼                             ▼
+Conversation Memory          Gemini Embeddings
+       │                             │
+       └──────────────┬──────────────┘
+                      ▼
+               Qdrant Cloud
+              Semantic Search
+                      │
+                      ▼
+            Retrieved Context
+                      │
+                      ▼
+            Gemini 2.5 Flash
+                      │
+                      ▼
+      AI Response + Source Citation
 ```
 
 ---
@@ -253,18 +239,19 @@ http://localhost:6333/dashboard
 ## Future Improvements
 
 * Multi-document retrieval
-* Voice interaction
 * Authentication
 * Role-based access
-* Cloud deployment
-* Multi-agent architecture using Google ADK/Lyzr
+* Voice interaction
+* OCR support
+* Image-based search
+* Multi-agent workflow using Google ADK or Lyzr
 
 ---
 
 ## Author
 
-**Manibhushana KG**
+Manibhushana KG
 
-B.E Computer Science Engineering
+B.E. Computer Science Engineering
 
 Bangalore Institute of Technology
