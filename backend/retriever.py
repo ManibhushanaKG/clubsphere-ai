@@ -1,9 +1,13 @@
 from google import genai
 from qdrant_client import QdrantClient
-from config import GEMINI_API_KEY
+from config import GEMINI_API_KEY, QDRANT_URL, QDRANT_API_KEY
 
 client = genai.Client(api_key=GEMINI_API_KEY)
-qdrant = QdrantClient(url="http://localhost:6333")
+
+qdrant = QdrantClient(
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY
+)
 
 COLLECTION = "club_docs"
 
@@ -14,21 +18,3 @@ def embed(text: str):
         contents=text
     )
     return response.embeddings[0].values
-
-
-query = "Who is the president?"
-
-query_vector = embed(query)
-
-results = qdrant.query_points(
-    collection_name=COLLECTION,
-    query=query_vector,
-    limit=3
-)
-
-print("\nTop Results:\n")
-
-for point in results.points:
-    print("=" * 60)
-    print(point.payload["text"])
-    print("=" * 60)

@@ -1,3 +1,4 @@
+from retriever import embed, qdrant
 from memory import conversation
 from fastapi import UploadFile, File
 from upload import ingest_pdf
@@ -26,7 +27,7 @@ def root():
 def health():
     return {"status": "ok"}
 
-from retriever import embed, qdrant
+
 
 @app.get("/chat")
 def chat(prompt: str):

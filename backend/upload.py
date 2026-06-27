@@ -12,11 +12,14 @@ from qdrant_client.models import (
     Distance
 )
 
-from config import GEMINI_API_KEY
+from config import GEMINI_API_KEY, QDRANT_URL, QDRANT_API_KEY
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-qdrant = QdrantClient(url="http://localhost:6333")
+qdrant = QdrantClient(
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY
+)
 
 COLLECTION = "club_docs"
 
